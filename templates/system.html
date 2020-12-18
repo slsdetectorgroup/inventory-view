@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{% block title %}Back End Boards{% endblock %}</h3>
+<p>All registered boards:</p>
+<p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">type</td>
+            <th scope="col">time</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, value in result.items()|sort(attribute='0') %}
+        <tr>
+            <th scope="row"> <a href="/eiger/system/{{ key }}">{{key}}</a> </th>
+            <td>{{value['type']}}</td>
+            <td>{{value['time']}}</td>
+            <!-- <td> {{ value['type'] }} </td> -->
+            <!-- <td> {{ value['inuse'] }} </td>
+            <td> {{ value['rev'] }} </td>
+            <td> {{ value['time'] }} </td> -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</p>
+{% endblock %}

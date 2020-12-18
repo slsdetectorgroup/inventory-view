@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{% block title %}Module - {{result['id']}}{% endblock %}</h3>
+
+<p>
+    <!-- <table class="table">
+        {% for key, value in result.items() %}
+        <tr><th>{{key}}</th><td>{{value}}</td></tr>
+        {% endfor %}
+    </table> -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>top</th>
+            <th>bottom</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>FEB</th>
+            <td>
+                <table>
+                    <tr>
+                        <td><a href="/eiger/feb/{{result['feb_top']['id']}}">{{result['feb_top']['id']}}</a></td>
+                    </tr>
+                    <tr>
+                        <td>{{result['feb_top_time']}}</td>
+                    </tr>
+                </table>
+
+
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td><a href="/eiger/feb/{{result['feb_bot']['id']}}">{{result['feb_bot']['id']}}</a></td>
+                    </tr>
+                    <tr>
+                        <td>{{result['feb_bot_time']}}</td>
+                    </tr>
+                </table>
+
+
+            </td>
+        </tr>
+        <tr>
+            <th>BEB</th>
+            <td>
+                <table>
+                    <tr>
+                        <td><b>{{result['beb_top']['hostname']}}</b></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/eiger/beb/{{result['beb_top']['id']}}">{{result['beb_top']['id']}}</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{result['beb_top_time']}}</td>
+                    </tr>
+                </table>
+
+
+
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td><b>{{result['beb_bot']['hostname']}}</b></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/eiger/beb/{{result['beb_bot']['id']}}">{{result['beb_bot']['id']}}</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>{{result['beb_bot_time']}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% for key, value in result.items() %}
+{% endfor %}
+
+<p>Extra:</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for key, value in result['extra'].items() %}
+        <tr>
+            <th>{{key}}</th>
+            <td>
+                {% if value is Path %}
+                <a href = "{{value}}">{{value.name}}</a>
+                {% else %}
+                {{value}}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
+</p>
+{% endblock %}
