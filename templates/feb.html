@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{% block title %}Front End Boards{% endblock %}</h3>
+<p>All registered boards:</p>
+<p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">id</td>
+            <th scope="col">fpgatype</th>
+            <th scope="col">rev</td>
+            <th scope="col">git modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, value in result.items()|sort(attribute='0') %}
+        <tr>
+            <th scope="row"> {{ key }} </th>
+            <td> <a href="feb/{{ value['id'] }}">{{ value['id'] }}</a></td>
+            <td> {{ value['fpgatype'] }} </td>
+            <td> {{ value['rev'] }} </td>
+            <td> {{ value['time'] }} </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</p>
+{% endblock %}
