@@ -92,12 +92,13 @@ def get_modules():
 
 def resolve_name(p):
     try:
-        rpath = Path(p).resolve().name
-        if rpath.name == p.name:
-            rpath = None
+        name = Path(p).resolve().name
+        # print(f'{name=}, {p=}, p.name: {p.name}')
+        if name == p.name:
+            name = None
     except:
-        rpath = None
-    return rpath
+        name = None
+    return name
 
 def get_module_info(full_id):
     p = cfg.path.module/full_id
@@ -106,6 +107,7 @@ def get_module_info(full_id):
     res['id'] = full_id
 
     for name in ['feb_top', 'feb_bot']:
+        # print(name, resolve_name(p/name))
         res[name] = get_feb_info(resolve_name(p/name))
     for name in ['beb_top', 'beb_bot']:
         res[name] = get_beb_info(resolve_name(p/name))
