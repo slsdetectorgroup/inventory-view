@@ -6,7 +6,9 @@
 <p>
     <table class="table">
         {% for key, value in result.items() %}
+        {%if key != 'url'%}
         <tr><th>{{key}}</th><td>{{value}}</td></tr>
+        {%endif%}
         {% endfor %}
     </table>
     

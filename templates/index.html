@@ -2,6 +2,27 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-<p>Hello, World!</p>
 <p>This is a small test site using fastapi to serve data from the git inventory</p>
+
+<ul>
+    {% for key, value in navigation_bar.items() %}
+    <li>
+        {% if value is string%}
+        <a href="{{value}}">{{key}}</a>
+        {%elif value is mapping%}
+        <b>{{key}}</b>
+        <ul>
+            {% for name, url in value.items() %}
+            <li><a href="{{url}}">{{name}}</a></li>
+            {%endfor%}
+        </ul>
+        {%endif%}
+    </li>
+
+    {%endfor%}
+
+</ul>
+
+
+
 {% endblock %}

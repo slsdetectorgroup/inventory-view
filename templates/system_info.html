@@ -1,15 +1,66 @@
 {% extends 'base.html' %}
-
+{% from 'macros.html' import display %}
 {% block content %}
-<h3>{% block title %}{{title}} End Boards{% endblock %}</h3>
+<h3>{% block title %}System - {{title}}{% endblock %}</h3>
 
 <p>
-    <table class="table">
-        {% for key, value in result.items() %}
-        <tr><th>{{key}}</th><td>{{value}}</td></tr>
-        {% endfor %}
-    </table>
-    
+<div class="container overflow-hidden">
+    <div class="row row-cols-3 gy-4">
+        {% for row in result['modules']%}
+        {%for module in row%}
+        <div class="col">
+            <div class="border bg-light">
+                <table class="table module-card">
+                    <thead>
+                        <th><a href = "/eiger/module/{{module['id']}}">{{module['id']}}</a></th>
+                        <th>top</th>
+                        <th>bottom</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>FEBs</th>
+                            <td><a href="{{module['feb_top']['url']}}">{{module['feb_top']['id']}}</a></td>
+                            <td><a href="{{module['feb_bot']['url']}}">{{module['feb_bot']['id']}}</a></td>
+                        </tr>
+                        <tr>
+                            <th>BEBs</th>
+                            <td><b>{{module['beb_top']['hostname']}}</b><br /><a
+                                    href="{{module['beb_top']['url']}}">{{module['beb_top']['id']}}</a></td>
+                            <td><b>{{module['beb_bot']['hostname']}}</b><br /><a
+                                    href="{{module['beb_bot']['url']}}">{{module['beb_bot']['id']}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {%endfor%}
+        {%endfor%}
+    </div>
+</div>
 
+
+
+
+{% set excluded = ['modules']%}
+<h3>Info:</h3>
+<table class="table">
+    {% for key, value in result.items() %}
+    {% if key not in excluded %}
+    <tr>
+        <th>{{key}}</th>
+        <td>{% if value is mapping%}
+            {%for name, link in value.items()%}
+            {{display(link)}}<br />
+            {%endfor%}
+            {%else%}
+            {{display(value)}}
+            {%endif%}
+
+        </td>
+    </tr>
+    {%endif%}
+    {% endfor %}
+</table>
 </p>
+
 {% endblock %}

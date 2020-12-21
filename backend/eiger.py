@@ -3,8 +3,10 @@ import os
 import time
 import backend.config as cfg
 from backend import git
+from backend.utils import FileLink
 import subprocess
 from pathlib import Path
+import json
 
 def get_febs():
     febs = [f for f in os.listdir(cfg.path.feb) if not f.endswith('cgi')]
@@ -54,6 +56,7 @@ def get_feb_info(full_id):
             res[field] = f.read()
 
     res['time'] = git.get_modified_time(p)
+    res['url'] = f'/eiger/feb/{full_id}'
     return res
 
 def get_beb_info(full_id):
@@ -73,6 +76,7 @@ def get_beb_info(full_id):
             res[field] = f.read()
 
     res['time'] = git.get_modified_time(p)
+    res['url'] = f'/eiger/beb/{full_id}'
     return res
 
 def get_modules():
@@ -93,7 +97,7 @@ def get_modules():
 def resolve_name(p):
     try:
         name = Path(p).resolve().name
-        # print(f'{name=}, {p=}, p.name: {p.name}')
+        print(f'{name=}, {p=}, p.name: {p.name}')
         if name == p.name:
             name = None
     except:
@@ -120,7 +124,8 @@ def get_module_info(full_id):
             with open(f, 'r') as infile:
                 res['extra'][f.name] = infile.read()
         else:
-            res['extra'][f.stem] = Path(f'/gitrepo/Eiger/modules/{res["id"]}/{f.name}')
+            res['extra'][f.stem] = FileLink(f)
+            # res['extra'][f.stem] = Path(f'/gitrepo/Eiger/modules/{res["id"]}/{f.name}')
         
     return res
 
@@ -145,4 +150,39 @@ def get_system_info(full_id):
     res['id'] = full_id
     res['type'] = full_id.split('_')[1]
     res['time'] = git.get_modified_time(p)
+
+    #Get the modules from json
+    with open(p/'modules') as f:
+        tmp = json.load(f)
+        modules = tmp['modules']
+        order = tmp['order']
+
+    modules = [[get_module_info(item) for item in row] for row in modules]
+
+    i=0
+    for row in modules:
+        for mod in row:
+            mod['beb_top']['hostname'] = f'{i*2}:{mod["beb_top"]["hostname"]}'
+            mod['beb_bot']['hostname'] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
+            i+=1
+
+    if order == 'col-first':
+        modules = list(zip(*modules))
+
+    res['modules'] = modules
+
+
+    excluded = ['modules']
+    files = [f for f in p.iterdir() if f.suffix != '.cgi' and f.name not in excluded]
+    for fname in files:
+        if fname.is_dir():
+            fpaths = [FileLink(f) for f in fname.iterdir()]
+            res[fname.stem] = fpaths
+
+        elif fname.suffix == '':
+            with open(fname, 'r') as f:
+                res[fname.name] = f.read()
+        else:
+            res[fname.name] = fname.name
+    
     return res

@@ -1,0 +1,19 @@
+
+{% macro display_item(var) %}
+{% if var is FileLink %}
+  <a href="{{var}}">{{var.name}}</a>
+{% else %}
+  {{var}}
+{% endif %}
+{% endmacro %}
+
+{% macro display(var) %}
+{%if var is list%}
+{%for item in var%}
+{{display_item(item)}}
+{%endfor%}
+{%else%}
+{{var}}
+{% endif %}
+{% endmacro %}
+

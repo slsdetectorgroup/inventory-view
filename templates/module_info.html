@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'macros.html' import display, display_item %}
 
 {% block content %}
 <h3>{% block title %}Module - {{result['id']}}{% endblock %}</h3>
@@ -99,11 +100,7 @@
         <tr>
             <th>{{key}}</th>
             <td>
-                {% if value is Path %}
-                <a href = "{{value}}">{{value.name}}</a>
-                {% else %}
-                {{value}}
-                {% endif %}
+                {{display_item(value)}}
             </td>
         </tr>
         {% endfor %}

@@ -3,16 +3,23 @@ from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from backend.utils import is_path
-from backend import eiger
+from backend.utils import is_path, is_file_link, is_list
+from backend import eiger, git
 import jinja2
 import backend.config as cfg
 app = FastAPI()
 app.mount("/gitrepo", StaticFiles(directory=cfg.git_path), name="gitrepo")
+app.mount("/media", StaticFiles(directory='media/'), name="media")
 
 
 templates = Jinja2Templates(directory="templates/")
 templates.env.tests['Path'] = is_path
+templates.env.tests['FileLink'] = is_file_link
+templates.env.tests['list'] = is_list
+templates.env.globals.update(
+    last_commit = git.last_commit,
+    branch = git.branch
+)
 
 @app.get("/")
 def read_root(request: Request):
@@ -61,4 +68,4 @@ def read_modules(request: Request):
 @app.get("/eiger/system/{full_id}")
 def read_system_info(request: Request, full_id: str):
     result = eiger.get_system_info(full_id)
-    return templates.TemplateResponse('system_info.html', context={'request':request, 'result': result,})
+    return templates.TemplateResponse('system_info.html', context={'request':request, 'result': result, 'title': full_id})
