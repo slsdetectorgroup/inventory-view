@@ -122,7 +122,7 @@ def get_module_info(full_id):
     for f in files:
         if f.suffix == '':
             with open(f, 'r') as infile:
-                res['extra'][f.name] = infile.read()
+                res['extra'][f.name] = infile.readlines()
         else:
             res['extra'][f.stem] = FileLink(f)
             # res['extra'][f.stem] = Path(f'/gitrepo/Eiger/modules/{res["id"]}/{f.name}')

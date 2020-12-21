@@ -3,14 +3,14 @@
 {% if var is FileLink %}
   <a href="{{var}}">{{var.name}}</a>
 {% else %}
-  {{var}}
+{{var}}
 {% endif %}
 {% endmacro %}
 
 {% macro display(var) %}
 {%if var is list%}
 {%for item in var%}
-{{display_item(item)}}
+{{display_item(item)}}<br/>
 {%endfor%}
 {%else%}
 {{var}}
