@@ -142,6 +142,32 @@ def get_systems():
             systemdict[s] = {'id':s}
     return systemdict
 
+
+
+def list_modules_in_system(full_id):
+    """
+    Return a nested list of modules in a system, adding id: to hostname to 
+    indicate how you can access the bebs from command line
+    """
+    if full_id is None:
+        return None
+    p = cfg.path.systems/full_id
+    files = [f for f in p.iterdir() if 'module_' in f.name]
+    files.sort(key = lambda x : tuple(int(i) for i in x.name.split('_')[1].split('.')))
+    cols = max(int(f.name.split('.')[-1]) for f in files)+1
+    modules = [get_module_info(resolve_name(f)) for f in files]
+    for f,m in zip(files, modules):
+        m['pos'] = f.name.split('_')[-1]
+    i=0
+    for mod in modules:
+            mod['beb_top']['hostname'] = f'{i*2}:{mod["beb_top"]["hostname"]}'
+            mod['beb_bot']['hostname'] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
+            i+=1
+
+    modules = [modules[i:i+cols] for i in range(0, len(modules), cols)]
+    modules = modules[::-1]
+    return modules
+
 def get_system_info(full_id):
     if full_id is None:
         return None
@@ -151,29 +177,12 @@ def get_system_info(full_id):
     res['type'] = full_id.split('_')[1]
     res['time'] = git.get_modified_time(p)
 
-    #Get the modules from json
-    with open(p/'modules') as f:
-        tmp = json.load(f)
-        modules = tmp['modules']
-        order = tmp['order']
 
-    modules = [[get_module_info(item) for item in row] for row in modules]
-
-    i=0
-    for row in modules:
-        for mod in row:
-            mod['beb_top']['hostname'] = f'{i*2}:{mod["beb_top"]["hostname"]}'
-            mod['beb_bot']['hostname'] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
-            i+=1
-
-    if order == 'col-first':
-        modules = list(zip(*modules))
-
-    res['modules'] = modules
+    res['modules'] = list_modules_in_system(full_id)
 
 
-    excluded = ['modules']
-    files = [f for f in p.iterdir() if f.suffix != '.cgi' and f.name not in excluded]
+    excluded = ['module', '.cgi']
+    files = [f for f in p.iterdir() if not any(n in f.name for n in excluded)]
     for fname in files:
         if fname.is_dir():
             fpaths = [FileLink(f) for f in fname.iterdir()]

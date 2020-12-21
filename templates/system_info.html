@@ -5,29 +5,32 @@
 
 <p>
 <div class="container overflow-hidden">
-    <div class="row row-cols-3 gy-4">
+    <div class="row row-cols-{{result['modules'][0]|count}} gy-4">
         {% for row in result['modules']%}
         {%for module in row%}
-        <div class="col">
+        <div class="col vertical">
             <div class="border bg-light">
                 <table class="table module-card">
                     <thead>
-                        <th><a href = "/eiger/module/{{module['id']}}">{{module['id']}}</a></th>
-                        <th>top</th>
-                        <th>bottom</th>
+                        <tr id = "module-name">
+                            <th colspan=2 ><a href="/eiger/module/{{module['id']}}">{{module['id']}} ({{module['pos']}})</a></th>
+                        </tr>
+                        <tr>
+                            <th>top</th>
+                            <th>bottom</th>
+                        </tr>
+
                     </thead>
                     <tbody>
                         <tr>
-                            <th>FEBs</th>
-                            <td><a href="{{module['feb_top']['url']}}">{{module['feb_top']['id']}}</a></td>
-                            <td><a href="{{module['feb_bot']['url']}}">{{module['feb_bot']['id']}}</a></td>
+                            <td><a href="{{module['feb_top']['url']}}">{{module['feb_top']['id'][-3:]}}</a></td>
+                            <td><a href="{{module['feb_bot']['url']}}">{{module['feb_bot']['id'][-3:]}}</a></td>
                         </tr>
                         <tr>
-                            <th>BEBs</th>
                             <td><b>{{module['beb_top']['hostname']}}</b><br /><a
-                                    href="{{module['beb_top']['url']}}">{{module['beb_top']['id']}}</a></td>
+                                    href="{{module['beb_top']['url']}}">{{module['beb_top']['id'][-3:]}}</a></td>
                             <td><b>{{module['beb_bot']['hostname']}}</b><br /><a
-                                    href="{{module['beb_bot']['url']}}">{{module['beb_bot']['id']}}</a></td>
+                                    href="{{module['beb_bot']['url']}}">{{module['beb_bot']['id'][-3:]}}</a></td>
                         </tr>
                     </tbody>
                 </table>

@@ -14,3 +14,13 @@ h3{
 .module-card{
     margin-bottom: 0em;
 }
+
+.vertical{
+    /* transform: rotate(-90deg); */
+}
+
+#module-name th
+{
+    text-align: center !important; 
+    vertical-align: middle;
+}
