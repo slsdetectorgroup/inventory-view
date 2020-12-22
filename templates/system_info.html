@@ -4,11 +4,12 @@
 <h3>{% block title %}System - {{title}}{% endblock %}</h3>
 
 <p>
+    <!-- row-cols-{{result['modules'][0]|count}} -->
 <div class="container overflow-hidden">
-    <div class="row row-cols-{{result['modules'][0]|count}} gy-4">
-        {% for row in result['modules']%}
+    {% for row in result['modules']%}
+    <div class="row justify-content-start g-4">
         {%for module in row%}
-        <div class="col vertical">
+        <div class="col-{{result['column-width']}} vertical">
             <div class="border bg-light">
                 <table class="table module-card">
                     <thead>
@@ -37,14 +38,16 @@
             </div>
         </div>
         {%endfor%}
-        {%endfor%}
     </div>
+    <div class="spacer"></div>
+    {%endfor%}
 </div>
 
 
 
 
-{% set excluded = ['modules']%}
+
+{% set excluded = ['modules', 'column-width']%}
 <h3>Info:</h3>
 <table class="table">
     {% for key, value in result.items() %}

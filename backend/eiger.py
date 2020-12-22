@@ -144,7 +144,7 @@ def get_systems():
 
 
 
-def list_modules_in_system(full_id):
+def list_modules_in_system(full_id, orientation = 'horizontal'):
     """
     Return a nested list of modules in a system, adding id: to hostname to 
     indicate how you can access the bebs from command line
@@ -158,12 +158,17 @@ def list_modules_in_system(full_id):
     modules = [get_module_info(resolve_name(f)) for f in files]
     for f,m in zip(files, modules):
         m['pos'] = f.name.split('_')[-1]
+    
+
+    if orientation == 'horizontal':
+        modules = modules[::-1]
     i=0
     for mod in modules:
             mod['beb_top']['hostname'] = f'{i*2}:{mod["beb_top"]["hostname"]}'
             mod['beb_bot']['hostname'] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
             i+=1
-
+    if orientation == 'horizontal':
+        modules = modules[::-1]
     modules = [modules[i:i+cols] for i in range(0, len(modules), cols)]
     modules = modules[::-1]
     return modules
@@ -176,11 +181,6 @@ def get_system_info(full_id):
     res['id'] = full_id
     res['type'] = full_id.split('_')[1]
     res['time'] = git.get_modified_time(p)
-
-
-    res['modules'] = list_modules_in_system(full_id)
-
-
     excluded = ['module', '.cgi']
     files = [f for f in p.iterdir() if not any(n in f.name for n in excluded)]
     for fname in files:
@@ -190,8 +190,18 @@ def get_system_info(full_id):
 
         elif fname.suffix == '':
             with open(fname, 'r') as f:
-                res[fname.name] = f.read()
+                res[fname.name] = f.read().strip('\n ')
         else:
             res[fname.name] = fname.name
     
+    res['modules'] = list_modules_in_system(full_id, res['orientation'])
+
+    #pass column width to display
+    res['column-width'] = 4
+    if len(res['modules'][0]) == 6:
+        res['column-width'] = 2
+     
+    
+
+
     return res

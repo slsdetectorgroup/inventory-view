@@ -24,3 +24,7 @@ h3{
     text-align: center !important; 
     vertical-align: middle;
 }
+
+.spacer{
+    height:1.5em;
+}
