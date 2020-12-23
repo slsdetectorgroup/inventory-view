@@ -42,7 +42,7 @@ def read_febs(request: Request):
 def read_bebs(request: Request):
     result = eiger.get_bebs()
     return templates.TemplateResponse(
-        "beb.html", context={"request": request, "result": result}
+        "beb.html", context={"request": request, "result": result, 'mounted': eiger.get_mounted_bebs()}
     )
 
 
@@ -103,4 +103,13 @@ def read_system_info(request: Request, full_id: str):
     return templates.TemplateResponse(
         "system_info.html",
         context={"request": request, "result": result, "title": full_id},
+    )
+
+
+@app.get('/about')
+def about(request: Request):
+    result = eiger.get_timings()
+    return templates.TemplateResponse(
+        "about.html",
+        context={"request": request, "result": result,},
     )

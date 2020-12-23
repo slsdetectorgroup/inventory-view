@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% from 'macros.html' import system_link %}
 {% block content %}
 <h3>{% block title %}Back End Boards{% endblock %}</h3>
 <p>All registered boards:</p>
@@ -13,6 +13,7 @@
             <th scope="col">inuse</th>
             <th scope="col">rev</td>
             <th scope="col">git modified</th>
+            <th scope="col">system</th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,11 @@
             <td> {{ value['inuse'] }} </td>
             <td> {{ value['rev'] }} </td>
             <td> {{ value['time'] }} </td>
+            <td>
+                {% if value['id'] in mounted %}
+                {{system_link(mounted[value['id']])}}
+                {%endif%}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

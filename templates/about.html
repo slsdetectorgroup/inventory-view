@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import system_link %}
+{% block content %}
+<h3>{% block title %}About{% endblock %}</h3>
+
+<p>
+<table class = "table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">function</th>
+            <th scope="col">time [s]</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for key, value in result.items()%}
+        <tr>
+            <td>{{key}}</td>
+            <td>{{value}}</td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+
+</p>
+{% endblock %}
