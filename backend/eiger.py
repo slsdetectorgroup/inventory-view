@@ -60,6 +60,28 @@ class EigerModule:
 
         return self
 
+def add_board(board_type, key):
+    print(f'We are in: {Path.cwd()}')
+    if board_type == 'beb_top':
+        path = cfg.path.beb
+    elif board_type == 'beb_bot':
+        path = cfg.path.beb
+    elif board_type == 'feb_top':
+        path = cfg.path.feb
+    elif board_type == 'feb_bot':
+        path = cfg.path.feb
+    else:
+        raise ValueError("Cannot determine board type")
+
+    folder = [f for f in path.iterdir() if f.name.endswith(key)]
+    if len(folder) != 1:
+        raise ValueError(f"Found {len(folder)} potential folders")
+    folder = folder[0]
+
+    # Path(f'../../{path.name}/{folder.name}').symlink_to(key)
+    Path(board_type).symlink_to((f'../../{path.name}/{folder.name}'))
+    
+
 def get_febs():
     febs = [f for f in os.listdir(cfg.path.feb) if not f.endswith('cgi')]
     failed_parse = []
