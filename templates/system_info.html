@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'macros.html' import display %}
+{% from 'macros.html' import display, module_card %}
 {% block content %}
 <h3>{% block title %}System - {{title}}{% endblock %}</h3>
 
@@ -10,32 +10,7 @@
     <div class="row justify-content-start g-4">
         {%for module in row%}
         <div class="col-{{result['column-width']}} vertical">
-            <div class="border bg-light">
-                <table class="table module-card">
-                    <thead>
-                        <tr id = "module-name">
-                            <th colspan=2 ><a href="/eiger/module/{{module['id']}}">{{module['id']}} ({{module['pos']}})</a></th>
-                        </tr>
-                        <tr>
-                            <th>top</th>
-                            <th>bottom</th>
-                        </tr>
-
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="{{module['feb_top']['url']}}">{{module['feb_top']['id'][-3:]}}</a></td>
-                            <td><a href="{{module['feb_bot']['url']}}">{{module['feb_bot']['id'][-3:]}}</a></td>
-                        </tr>
-                        <tr>
-                            <td><b>{{module['beb_top']['hostname']}}</b><br /><a
-                                    href="{{module['beb_top']['url']}}">{{module['beb_top']['id'][-3:]}}</a></td>
-                            <td><b>{{module['beb_bot']['hostname']}}</b><br /><a
-                                    href="{{module['beb_bot']['url']}}">{{module['beb_bot']['id'][-3:]}}</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {{module_card(module)}}
         </div>
         {%endfor%}
     </div>

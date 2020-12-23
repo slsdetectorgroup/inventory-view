@@ -17,3 +17,65 @@
 {% endif %}
 {% endmacro %}
 
+{% macro board_link(board)%}
+{% if board is not none %}
+<a href="{{board['url']}}">{{board['id'][-3:]}}</a>
+{%else%}
+N/A
+{%endif%}
+{% endmacro %}
+
+{% macro system_link(full_id)%}
+<a href="/eiger/system/{{full_id}}">{{full_id}}</a>
+{% endmacro %}
+
+{% macro beb_link_w_name(board)%}
+{% if board is not none %}
+<a href="{{board['url']}}">{{board['id'][-3:]}} ({{board['hostname']}})</a>
+{%else%}
+N/A
+{%endif%}
+{% endmacro %}
+
+{% macro beb_name(beb) %}
+{% if beb is not none %}
+<b>{{beb['hostname']}}</b><br />{{board_link(beb)}}
+{%else%}
+<b>N/A</b><br />N/A
+{%endif%}
+{%endmacro%}
+
+{%macro module_link(module)%}
+{% if module['id'] is not none %}
+<a href="/eiger/module/{{module['id']}}">{{module['id']}} ({{module['pos']}})</a>
+{%else%}
+{{module['id']}} ({{module['pos']}})
+{%endif%}
+{%endmacro%}
+
+{% macro module_card(module) %}
+<div class="border bg-light">
+  <table class="table module-card">
+      <thead>
+          <tr id = "module-name">
+              <th colspan=2 >{{module_link(module)}}</th>
+          </tr>
+          <tr>
+              <th>top</th>
+              <th>bottom</th>
+          </tr>
+
+      </thead>
+      <tbody>
+          <tr>
+              <td>{{board_link(module['feb_top'])}}</td>
+              <td>{{board_link(module['feb_bot'])}}</td>
+          </tr>
+          <tr>
+              <td>{{beb_name(module['beb_top'])}}</td>
+              <td>{{beb_name(module['beb_bot'])}}</td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+{% endmacro %}

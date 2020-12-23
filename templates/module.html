@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'macros.html' import beb_link_w_name, board_link, system_link %}
 
 {% block content %}
 <h3>{% block title %}Modules{% endblock %}</h3>
@@ -7,10 +8,12 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">id</td>
-            <!-- <th scope="col">fpgatype</th>
-            <th scope="col">rev</td>
-            <th scope="col">git modified</th> -->
+            <th scope="col">id</th>
+            <th scope="col">beb_top</th>
+            <th scope="col">beb_bot</th>
+            <th scope="col">feb_top</th>
+            <th scope="col">feb_bot</th>
+            <th scope="col">system</th>
         </tr>
     </thead>
     <tbody>
@@ -18,13 +21,18 @@
         <tr>
             <th scope="row"> {{ key }} </th>
             <td> <a href="/eiger/module/{{ value['id'] }}">{{ value['id'] }}</a></td>
-            <!-- <td> {{ value['fpgatype'] }} </td>
-            <td> {{ value['rev'] }} </td>
-            <td> {{ value['time'] }} </td> -->
+            <td>{{beb_link_w_name(value['beb_top'])}}</td>
+            <td>{{beb_link_w_name(value['beb_bot'])}}</td>
+            <td>{{board_link(value['feb_top'])}}</td>
+            <td>{{board_link(value['feb_bot'])}}</td>
+            <td>
+                {% if value['id'] in mounted %}
+                {{system_link(mounted[value['id']])}}
+                {%endif%}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-
 </p>
 {% endblock %}

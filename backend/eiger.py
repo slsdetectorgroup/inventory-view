@@ -8,6 +8,58 @@ import subprocess
 from pathlib import Path
 import json
 
+
+
+
+class EigerModule:
+    def __init__(self):
+        self.data = {}
+        self['id'] = None
+        self['beb_top'] = None
+        self['beb_bot'] = None
+        self['feb_top'] = None
+        self['feb_bot'] = None
+        self['extra'] = {}
+
+    def __str__(self):
+        return f'EigerModule({self["id"]})'
+
+    def __repr__(self):
+        return self.__str__()
+
+    def items(self):
+        return self.data.items()
+
+    def __getitem__(self, key):
+        return self.data[key]
+
+    def __setitem__(self, key, value):
+        self.data[key] = value
+
+    def load(self, full_id):
+        if full_id is None:
+            return self
+        p = cfg.path.module/full_id
+        if not p.is_dir():
+            return
+
+        self['id'] = full_id
+        for name in ['feb_top', 'feb_bot']:
+            self[name] = get_feb_info(resolve_name(p/name))
+        for name in ['beb_top', 'beb_bot']:
+            self[name] = get_beb_info(resolve_name(p/name))
+
+        self['extra']['time'] = git.get_modified_time(p)
+        files = [f for f in p.iterdir() if not f.is_symlink()]
+        for f in files:
+            if f.suffix == '':
+                with open(f, 'r') as infile:
+                    self['extra'][f.name] = infile.readlines()
+            else:
+                self['extra'][f.stem] = FileLink(f)
+
+        return self
+
 def get_febs():
     febs = [f for f in os.listdir(cfg.path.feb) if not f.endswith('cgi')]
     failed_parse = []
@@ -79,6 +131,18 @@ def get_beb_info(full_id):
     res['url'] = f'/eiger/beb/{full_id}'
     return res
 
+def get_mounted_modules():
+    modules = {}
+    path = cfg.path.systems
+    
+    for fname in path.iterdir():
+        if fname.is_dir():
+            for mod in fname.iterdir():
+                if mod.is_symlink():
+                    modules[resolve_name(mod)] = fname.name
+    return modules
+    
+
 def get_modules():
     modules = [f for f in os.listdir(cfg.path.module) if not f.endswith('cgi')]
     failed_parse = []
@@ -87,7 +151,8 @@ def get_modules():
     for m in modules:
         try: 
             index = int(m.strip('T'))
-            moddict[index] = {'id':m}
+            # moddict[index] = {'id':m}
+            moddict[index] = EigerModule().load(m)
             # bebdict[index] = get_beb_info(b)
         except:
             moddict[failed_index] = {'id':m}
@@ -104,30 +169,6 @@ def resolve_name(p):
         name = None
     return name
 
-def get_module_info(full_id):
-    p = cfg.path.module/full_id
-
-    res = {}
-    res['id'] = full_id
-
-    for name in ['feb_top', 'feb_bot']:
-        # print(name, resolve_name(p/name))
-        res[name] = get_feb_info(resolve_name(p/name))
-    for name in ['beb_top', 'beb_bot']:
-        res[name] = get_beb_info(resolve_name(p/name))
-
-    res['extra'] = {}
-    res['extra']['time'] = git.get_modified_time(p)
-    files = [f for f in p.iterdir() if not f.is_symlink()]
-    for f in files:
-        if f.suffix == '':
-            with open(f, 'r') as infile:
-                res['extra'][f.name] = infile.readlines()
-        else:
-            res['extra'][f.stem] = FileLink(f)
-            # res['extra'][f.stem] = Path(f'/gitrepo/Eiger/modules/{res["id"]}/{f.name}')
-        
-    return res
 
 def get_systems():
     systems = [f for f in os.listdir(cfg.path.systems) if not f.endswith('cgi')]
@@ -155,7 +196,7 @@ def list_modules_in_system(full_id, orientation = 'horizontal'):
     files = [f for f in p.iterdir() if 'module_' in f.name]
     files.sort(key = lambda x : tuple(int(i) for i in x.name.split('_')[1].split('.')))
     cols = max(int(f.name.split('.')[-1]) for f in files)+1
-    modules = [get_module_info(resolve_name(f)) for f in files]
+    modules = [EigerModule().load(resolve_name(f)) for f in files]
     for f,m in zip(files, modules):
         m['pos'] = f.name.split('_')[-1]
     
@@ -164,6 +205,7 @@ def list_modules_in_system(full_id, orientation = 'horizontal'):
         modules = modules[::-1]
     i=0
     for mod in modules:
+        if mod['beb_top'] is not None:
             mod['beb_top']['hostname'] = f'{i*2}:{mod["beb_top"]["hostname"]}'
             mod['beb_bot']['hostname'] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
             i+=1
