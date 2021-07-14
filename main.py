@@ -77,6 +77,19 @@ def read_modules(request: Request):
     )
 
 
+@app.get("/eiger/list/{key}")
+def read_modules(request: Request,key: str):
+    result = eiger.get_modules(key)
+    return templates.TemplateResponse(
+        "module.html",
+        context={
+            "request": request,
+            "result": result,
+            "mounted": eiger.get_mounted_modules(),
+        },
+    )
+
+
 @app.get("/eiger/module/{full_id}")
 def read_feb_info(request: Request, full_id: str):
     result = eiger.EigerModule().load(full_id)

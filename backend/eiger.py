@@ -176,7 +176,7 @@ def get_mounted_bebs():
     return boards
 
 
-def get_modules():
+def get_modules(key = None):
     modules = [f for f in os.listdir(cfg.path.module) if not f.endswith("cgi")]
     failed_parse = []
     moddict = {}
@@ -188,8 +188,22 @@ def get_modules():
         except:
             moddict[failed_index] = {"id": m}
             failed_index += 1
+
+    moddict = filter_modules(mods = moddict, key=key)
     return moddict
 
+def filter_modules(mods, key):
+    print(f'filter_modules: key: {key}')
+    if key is None:
+        return mods
+    if key == 'mounted':
+        mounted = get_mounted_modules()
+        return {k:v for k,v in mods.items() if f'T{k}' in mounted.keys()}
+    if key == 'unmounted':
+        mounted = get_mounted_modules()
+        return {k:v for k,v in mods.items() if f'T{k}' not in mounted.keys()}
+
+    return mods
 
 def resolve_name(p):
     try:
