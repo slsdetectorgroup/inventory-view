@@ -39,7 +39,7 @@ class EigerModule:
             return self
         p = cfg.path.module / full_id
         if not p.is_dir():
-            return
+            return self
 
         self["id"] = full_id
         for name in ["feb_top", "feb_bot"]:
@@ -171,6 +171,7 @@ def get_mounted_bebs():
 
     for mod, system in modules.items():
         m = EigerModule().load(mod)
+        print(m)
         if m["beb_top"] is not None:
             boards[m["beb_top"]["id"]] = system
     return boards
@@ -181,9 +182,13 @@ def get_modules(key = None):
     failed_parse = []
     moddict = {}
     failed_index = 900
+    special_index = 500
     for m in modules:
         try:
-            index = int(m.strip("T"))
+            if m[0] == "T":
+                index = int(m.strip("T"))
+            elif m[0] == "B":
+                index = int(m.strip("B"))+special_index
             moddict[index] = EigerModule().load(m)
         except:
             moddict[failed_index] = {"id": m}
@@ -279,7 +284,7 @@ def get_system_info(full_id):
             with open(fname, "r") as f:
                 res[fname.name] = f.read().strip("\n ")
         else:
-            res[fname.name] = fname.name
+            res[fname.name] = FileLink(fname)
 
     res["modules"] = list_modules_in_system(full_id, res["orientation"])
 
