@@ -22,7 +22,7 @@
 
 
 
-{% set excluded = ['modules', 'column-width']%}
+{% set excluded = ['modules', 'column-width', 'additional_info']%}
 <h3>Info:</h3>
 <table class="table">
     {% for key, value in result.items() %}
@@ -43,5 +43,7 @@
     {% endfor %}
 </table>
 </p>
+
+{{result['additional_info']|safe}}
 
 {% endblock %}

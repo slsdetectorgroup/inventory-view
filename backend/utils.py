@@ -1,6 +1,14 @@
 from pathlib import Path
 import backend.config as cfg
 
+import markdown
+
+def parse_md(fname):
+    f = open(fname)
+    text = f.read()
+    html = markdown.markdown(text, extensions = ['fenced_code', 'codehilite'])
+    return html
+
 class FileLink:
     def __init__(self, path):
         if isinstance(path, Path):

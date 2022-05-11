@@ -2,7 +2,7 @@ import os
 import time
 import backend.config as cfg
 from backend import git
-from backend.utils import FileLink
+from backend.utils import FileLink, parse_md
 import subprocess
 from pathlib import Path
 import json
@@ -256,7 +256,8 @@ def list_modules_in_system(full_id, orientation="horizontal"):
     for mod in modules:
         if mod["beb_top"] is not None:
             mod["beb_top"]["hostname"] = f'{i*2}:{mod["beb_top"]["hostname"]}'
-            mod["beb_bot"]["hostname"] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
+            if mod["beb_bot"] is not None:
+                mod["beb_bot"]["hostname"] = f'{i*2+1}:{mod["beb_bot"]["hostname"]}'
             i += 1
     if orientation == "horizontal":
         modules = modules[::-1]
@@ -273,7 +274,7 @@ def get_system_info(full_id):
     res["id"] = full_id
     res["type"] = full_id.split("_")[1]
     res["time"] = git.get_modified_time(p)
-    excluded = ["module", ".cgi"]
+    excluded = ["module", ".cgi", ".md"]
     files = [f for f in p.iterdir() if not any(n in f.name for n in excluded)]
     for fname in files:
         if fname.is_dir():
@@ -292,6 +293,10 @@ def get_system_info(full_id):
     res["column-width"] = 4
     if len(res["modules"][0]) == 6:
         res["column-width"] = 2
+
+    md_file = p/'info.md'
+    if md_file.is_file():
+        res["additional_info"] = parse_md(md_file)
 
     return res
 
