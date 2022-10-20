@@ -113,6 +113,7 @@ def get_bebs():
 
 
 def get_feb_info(full_id):
+
     if full_id is None:
         return None
     # do some checks maybe
@@ -174,6 +175,8 @@ def get_mounted_bebs():
         print(m)
         if m["beb_top"] is not None:
             boards[m["beb_top"]["id"]] = system
+        if m["beb_bot"] is not None:
+            boards[m["beb_bot"]["id"]] = system
     return boards
 
 
@@ -191,7 +194,7 @@ def get_modules(key = None):
                 index = int(m.strip("B"))+special_index
             moddict[index] = EigerModule().load(m)
         except:
-            moddict[failed_index] = {"id": m}
+            moddict[failed_index] = {"id": m, 'beb_top': None, 'beb_bot': None, 'feb_top':None, 'feb_bot': None}
             failed_index += 1
 
     moddict = filter_modules(mods = moddict, key=key)
