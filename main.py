@@ -126,3 +126,9 @@ def about(request: Request):
         "about.html",
         context={"request": request, "result": result,},
     )
+
+
+if __name__ == "__main__":
+    from argparse import ArgumentParser
+    import uvicorn
+    uvicorn.run("main:app", port=5000, log_level="info", reload=True)
