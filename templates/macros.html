@@ -47,7 +47,7 @@ N/A
 
 {%macro module_link(module)%}
 {% if module['id'] is not none %}
-<a href="{{url_for('read_root')}}eiger/module/{{module['id']}}">{{module['id']}} ({{module['pos']}})</a>
+<a href="/eiger/module/{{module['id']}}">{{module['id']}} ({{module['pos']}})</a>
 {%else%}
 {{module['id']}} ({{module['pos']}})
 {%endif%}
