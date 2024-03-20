@@ -8,12 +8,12 @@
     {% for key, value in navigation_bar.items() %}
     <li>
         {% if value is string%}
-        <a href="{{value}}">{{key}}</a>
+        <a href="{{url_for('read_root')}}{{value}}">{{key}}</a>
         {%elif value is mapping%}
         <b>{{key}}</b>
         <ul>
             {% for name, url in value.items() %}
-            <li><a href="{{url}}">{{name}}</a></li>
+            <li><a href="{{url_for('read_root')}}{{url}}">{{name}}</a></li>
             {%endfor%}
         </ul>
         {%endif%}

@@ -15,8 +15,8 @@
     <title>Inventory - {% block title %}{% endblock %}</title>
 </head>
 
-{% set navigation_bar = {'Home':'', 'Eiger': {'FEBs':'/eiger/feb', 'BEBs':'/eiger/beb', 'Modules':'/eiger/module',
-'Systems':'/eiger/system'}} -%}
+{% set navigation_bar = {'Home':'', 'Eiger': {'FEBs':'eiger/feb', 'BEBs':'eiger/beb', 'Modules':'eiger/module',
+'Systems':'eiger/system'}} -%}
 
 
 <body>
@@ -65,7 +65,7 @@
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Moench</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about" tabindex="-1">About</a>
+                        <a class="nav-link" href="{{url_for('read_root')}}about" tabindex="-1">About</a>
                     </li>
                 </ul>
             </div>
