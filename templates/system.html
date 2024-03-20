@@ -17,7 +17,7 @@
     <tbody>
         {% for key, value in result.items()|sort(attribute='0') %}
         <tr>
-            <th scope="row"> <a href="/eiger/system/{{ key }}">{{key}}</a> </th>
+            <th scope="row"> <a href="{{url_for('read_root')}}eiger/system/{{ key }}">{{key}}</a> </th>
             <td>{{value['type']}}</td>
             <td>{{value['time']}}</td>
             <!-- <td> {{ value['type'] }} </td> -->
