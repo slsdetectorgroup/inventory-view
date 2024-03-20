@@ -15,7 +15,7 @@
     <title>Inventory - {% block title %}{% endblock %}</title>
 </head>
 
-{% set navigation_bar = {'Home':'/', 'Eiger': {'FEBs':'/eiger/feb', 'BEBs':'/eiger/beb', 'Modules':'/eiger/module',
+{% set navigation_bar = {'Home':'', 'Eiger': {'FEBs':'/eiger/feb', 'BEBs':'/eiger/beb', 'Modules':'/eiger/module',
 'Systems':'/eiger/system'}} -%}
 
 
@@ -23,7 +23,8 @@
     <nav class="navbar navbar-light navbar-expand-lg" style="background-color: #e3f2fd;">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="/media/psi.svg" alt="" width="210" height="75">
+                <img src="{{ url_for('media', path='psi.svg') }}" alt="" width="210" height="75">
+                
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -36,7 +37,7 @@
                     {% for key, value in navigation_bar.items() %}
                     {%if value is string %}
                     <li class="nav-item">
-                        <a class="nav-link" , href="{{value}}">{{key}}</a>
+                        <a class="nav-link" , href="{{url_for('read_root')}}{{value}}">{{key}}</a>
                     </li>
                     {%elif value is mapping%}
                     <li class="nav-item dropdown">
@@ -44,7 +45,7 @@
                             aria-expanded="false">{{key}}</a>
                         <ul class="dropdown-menu">
                             {%for name, url in value.items()%}
-                            <li><a class="dropdown-item" href="{{url}}">{{name}}</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('read_root')}}{{url}}">{{name}}</a></li>
                             {%endfor%}
                         </ul>
                     </li>
