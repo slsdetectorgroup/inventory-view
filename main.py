@@ -62,7 +62,7 @@ def read_feb_info(request: Request, full_id: str):
 
 
 @app.get("/eiger/beb/{full_id}")
-def read_feb_info(request: Request, full_id: str):
+def read_beb_info(request: Request, full_id: str):
     result = eiger.get_beb_info(full_id)
     return templates.TemplateResponse(
         "board_info.html",
