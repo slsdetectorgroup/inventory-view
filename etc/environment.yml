@@ -1,0 +1,14 @@
+name: inventory
+channels:
+  - conda-forge
+dependencies:
+  - python 
+  - fastapi
+  - uvicorn
+  - gunicorn
+  - jinja2
+  - requests
+  # - bs4
+  - markdown
+  # - pandas
+  # - python-multipart

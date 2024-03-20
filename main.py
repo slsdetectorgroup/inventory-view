@@ -8,6 +8,12 @@ from backend import eiger, git
 import jinja2
 import backend.config as cfg
 
+
+import os
+
+print(f'GIT_INVENTORY_PATH: {os.getenv("GIT_INVENTORY_PATH")}')
+cfg.git_path = os.getenv("GIT_INVENTORY_PATH")
+
 app = FastAPI()
 app.mount("/gitrepo", StaticFiles(directory=cfg.git_path), name="gitrepo")
 app.mount("/media", StaticFiles(directory="media/"), name="media")
@@ -127,8 +133,3 @@ def about(request: Request):
         context={"request": request, "result": result,},
     )
 
-
-if __name__ == "__main__":
-    from argparse import ArgumentParser
-    import uvicorn
-    uvicorn.run("main:app", port=5000, log_level="info", reload=True)
