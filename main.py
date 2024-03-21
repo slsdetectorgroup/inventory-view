@@ -73,14 +73,18 @@ def read_beb_info(request: Request, full_id: str):
 @app.get("/eiger/module")
 def read_modules(request: Request):
     result = eiger.get_modules()
-    return templates.TemplateResponse(
+    mounted = eiger.get_mounted_modules()
+    for k,v in result.items():
+        print(f'{k}: {v}')
+    r =  templates.TemplateResponse(
         "module.html",
         context={
             "request": request,
             "result": result,
-            "mounted": eiger.get_mounted_modules(),
+            "mounted": mounted,
         },
     )
+    return r
 
 
 @app.get("/eiger/list/{key}")

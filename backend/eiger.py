@@ -10,7 +10,8 @@ import time
 
 
 class EigerModule:
-    def __init__(self):
+    def __init__(self, root_prefix = "/"):
+        self.root_prefix = root_prefix
         self.data = {}
         self["id"] = None
         self["beb_top"] = None
@@ -45,7 +46,7 @@ class EigerModule:
         for name in ["feb_top", "feb_bot"]:
             self[name] = get_feb_info(resolve_name(p / name))
         for name in ["beb_top", "beb_bot"]:
-            self[name] = get_beb_info(resolve_name(p / name))
+            self[name] = get_beb_info(resolve_name(p / name), prefix = f'{self.root_prefix}/eiger/beb/')
 
         self["extra"]["time"] = git.get_modified_time(p)
         files = [f for f in p.iterdir() if not f.is_symlink()]
@@ -180,7 +181,7 @@ def get_mounted_bebs():
     return boards
 
 
-def get_modules(key = None):
+def get_modules(key = None, prefix = ""):
     modules = [f for f in os.listdir(cfg.path.module) if not f.endswith("cgi")]
     failed_parse = []
     moddict = {}
@@ -192,7 +193,7 @@ def get_modules(key = None):
                 index = int(m.strip("T"))
             elif m[0] == "B":
                 index = int(m.strip("B"))+special_index
-            moddict[index] = EigerModule().load(m)
+            moddict[index] = EigerModule(root_prefix=prefix).load(m)
         except:
             moddict[failed_index] = {"id": m, 'beb_top': None, 'beb_bot': None, 'feb_top':None, 'feb_bot': None}
             failed_index += 1
@@ -232,7 +233,6 @@ def get_systems():
     for s in systems:
         try:
             systemdict[s] = get_system_info(s)
-            # bebdict[index] = get_beb_info(b)
         except:
             systemdict[s] = {"id": s}
     return systemdict
