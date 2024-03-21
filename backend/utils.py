@@ -11,12 +11,14 @@ def parse_md(fname):
 
 class FileLink:
     def __init__(self, path, root_prefix = ""):
+        if root_prefix and not root_prefix.endswith('/'):
+            root_prefix += '/'
         self.root_prefix = root_prefix
         if isinstance(path, Path):
             path = path.as_posix()
         path = path.replace(cfg.path.git.as_posix(), '/gitrepo')
-        self.path = Path(self.root_prefix)/Path(path)
-        print(f'{self.root_prefix=}, {self.path=}')
+
+        self.path = Path(f'{self.root_prefix}{path}')
 
     def __repr__(self):
         return self.path.as_posix()
