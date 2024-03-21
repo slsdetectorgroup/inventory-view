@@ -238,7 +238,7 @@ def get_systems():
     return systemdict
 
 
-def list_modules_in_system(full_id, orientation="horizontal"):
+def list_modules_in_system(full_id, orientation="horizontal", prefix = ''):
     """
     Return a nested list of modules in a system, adding id: to hostname to
     indicate how you can access the bebs from command line
@@ -249,7 +249,7 @@ def list_modules_in_system(full_id, orientation="horizontal"):
     files = [f for f in p.iterdir() if "module_" in f.name]
     files.sort(key=lambda x: tuple(int(i) for i in x.name.split("_")[1].split(".")))
     cols = max(int(f.name.split(".")[-1]) for f in files) + 1
-    modules = [EigerModule().load(resolve_name(f)) for f in files]
+    modules = [EigerModule(root_prefix=prefix).load(resolve_name(f)) for f in files]
     for f, m in zip(files, modules):
         m["pos"] = f.name.split("_")[-1]
 
@@ -269,7 +269,7 @@ def list_modules_in_system(full_id, orientation="horizontal"):
     return modules
 
 
-def get_system_info(full_id):
+def get_system_info(full_id, prefix = ""):
     if full_id is None:
         return None
     p = cfg.path.systems / full_id
@@ -290,7 +290,7 @@ def get_system_info(full_id):
         else:
             res[fname.name] = FileLink(fname)
 
-    res["modules"] = list_modules_in_system(full_id, res["orientation"])
+    res["modules"] = list_modules_in_system(full_id, res["orientation"], prefix=prefix)
 
     # pass column width to display
     res["column-width"] = 4

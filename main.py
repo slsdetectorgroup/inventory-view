@@ -122,7 +122,7 @@ def read_modules(request: Request):
 
 @app.get("/eiger/system/{full_id}")
 def read_system_info(request: Request, full_id: str):
-    result = eiger.get_system_info(full_id)
+    result = eiger.get_system_info(full_id, prefix=request.scope.get("root_path"))
     return templates.TemplateResponse(
         "system_info.html",
         context={"request": request, "result": result, "title": full_id},
