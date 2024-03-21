@@ -283,7 +283,7 @@ def get_system_info(full_id, prefix = ""):
     files = [f for f in p.iterdir() if not any(n in f.name for n in excluded)]
     for fname in files:
         if fname.is_dir():
-            fpaths = [FileLink(f) for f in fname.iterdir()]
+            fpaths = [FileLink(f, root_prefix=prefix) for f in fname.iterdir()]
             res[fname.stem] = fpaths
 
         elif fname.suffix == "":
