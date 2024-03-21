@@ -133,7 +133,7 @@ def get_feb_info(full_id):
     return res
 
 
-def get_beb_info(full_id):
+def get_beb_info(full_id, prefix = "/eiger/beb/"):
     if full_id is None:
         return None
     # do some checks maybe
@@ -150,7 +150,7 @@ def get_beb_info(full_id):
             res[field] = f.read()
 
     res["time"] = git.get_modified_time(p)
-    res["url"] = f"/eiger/beb/{full_id}"
+    res["url"] = f"{prefix}{full_id}"
     return res
 
 
