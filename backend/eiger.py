@@ -44,7 +44,7 @@ class EigerModule:
 
         self["id"] = full_id
         for name in ["feb_top", "feb_bot"]:
-            self[name] = get_feb_info(resolve_name(p / name))
+            self[name] = get_feb_info(resolve_name(p / name), prefix = f'{self.root_prefix}/eiger/feb/')
         for name in ["beb_top", "beb_bot"]:
             self[name] = get_beb_info(resolve_name(p / name), prefix = f'{self.root_prefix}/eiger/beb/')
 
@@ -113,7 +113,7 @@ def get_bebs():
     return bebdict
 
 
-def get_feb_info(full_id):
+def get_feb_info(full_id, prefix = "/eiger/feb/"):
 
     if full_id is None:
         return None
@@ -130,7 +130,7 @@ def get_feb_info(full_id):
             res[field] = f.read()
 
     res["time"] = git.get_modified_time(p)
-    res["url"] = f"/eiger/feb/{full_id}"
+    res["url"] = f"{prefix}{full_id}"
     return res
 
 
