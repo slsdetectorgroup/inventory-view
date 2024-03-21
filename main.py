@@ -14,7 +14,7 @@ import os
 print(f'GIT_INVENTORY_PATH: {os.getenv("GIT_INVENTORY_PATH")}')
 cfg.git_path = os.getenv("GIT_INVENTORY_PATH")
 
-app = FastAPI()
+app = FastAPI(root_path=os.environ.get('GIT_INVENTORY_ROOT_PATH'))
 app.mount("/gitrepo", StaticFiles(directory=cfg.git_path), name="gitrepo")
 app.mount("/media", StaticFiles(directory="media/"), name="media")
 
