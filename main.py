@@ -72,7 +72,7 @@ def read_beb_info(request: Request, full_id: str):
 
 @app.get("/eiger/module")
 def read_modules(request: Request):
-    result = eiger.get_modules()
+    result = eiger.get_modules(prefix=request.scope.get("root_path"))
     mounted = eiger.get_mounted_modules()
     for k,v in result.items():
         print(f'{k}: {v}')
