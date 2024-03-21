@@ -14,6 +14,7 @@ class EigerModule:
         self.root_prefix = root_prefix
         self.data = {}
         self["id"] = None
+        self["url"] = None
         self["beb_top"] = None
         self["beb_bot"] = None
         self["feb_top"] = None
@@ -43,6 +44,7 @@ class EigerModule:
             return self
 
         self["id"] = full_id
+        self["url"] = f'{self.root_prefix}/eiger/module/{full_id}'
         for name in ["feb_top", "feb_bot"]:
             self[name] = get_feb_info(resolve_name(p / name), prefix = f'{self.root_prefix}/eiger/feb/')
         for name in ["beb_top", "beb_bot"]:
