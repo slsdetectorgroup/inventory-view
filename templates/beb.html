@@ -27,7 +27,8 @@
             <td> {{ value['time'] }} </td>
             <td>
                 {% if value['id'] in mounted %}
-                {{system_link(mounted[value['id']])}}
+                <a href="{{url_for('read_system_info', full_id = mounted[value['id']])}}">{{mounted[value['id']]}}</a>
+                <!-- {{system_link(mounted[value['id']])}} -->
                 {%endif%}
             </td>
         </tr>
