@@ -16,6 +16,7 @@ class FileLink:
             path = path.as_posix()
         path = path.replace(cfg.path.git.as_posix(), '/gitrepo')
         self.path = Path(self.root_prefix)/Path(path)
+        print(f'{self.root_prefix=}, {self.path=}')
 
     def __repr__(self):
         return self.path.as_posix()
