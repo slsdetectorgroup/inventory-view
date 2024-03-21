@@ -290,7 +290,7 @@ def get_system_info(full_id, prefix = ""):
             with open(fname, "r") as f:
                 res[fname.name] = f.read().strip("\n ")
         else:
-            res[fname.name] = FileLink(fname)
+            res[fname.name] = FileLink(fname, root_prefix = prefix)
 
     res["modules"] = list_modules_in_system(full_id, res["orientation"], prefix=prefix)
 
