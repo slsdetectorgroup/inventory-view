@@ -57,7 +57,7 @@ class EigerModule:
                 with open(f, "r") as infile:
                     self["extra"][f.name] = infile.readlines()
             else:
-                self["extra"][f.stem] = FileLink(f)
+                self["extra"][f.stem] = FileLink(f, root_prefix = self.root_prefix)
 
         return self
 

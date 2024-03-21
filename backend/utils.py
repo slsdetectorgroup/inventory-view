@@ -10,11 +10,12 @@ def parse_md(fname):
     return html
 
 class FileLink:
-    def __init__(self, path):
+    def __init__(self, path, root_prefix = ""):
+        self.root_prefix = root_prefix
         if isinstance(path, Path):
             path = path.as_posix()
         path = path.replace(cfg.path.git.as_posix(), '/gitrepo')
-        self.path = Path(path)
+        self.path = Path(self.root_prefix)/Path(path)
 
     def __repr__(self):
         return self.path.as_posix()

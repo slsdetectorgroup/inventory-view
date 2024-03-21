@@ -101,8 +101,8 @@ def read_modules(request: Request,key: str):
 
 
 @app.get("/eiger/module/{full_id}")
-def read_feb_info(request: Request, full_id: str):
-    result = eiger.EigerModule().load(full_id)
+def read_module_info(request: Request, full_id: str):
+    result = eiger.EigerModule(root_prefix=request.scope.get("root_path")).load(full_id)
     return templates.TemplateResponse(
         "module_info.html",
         context={
